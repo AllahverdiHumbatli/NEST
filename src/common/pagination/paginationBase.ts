@@ -23,7 +23,7 @@ export class Pagination {
     public readonly sortDirection: SortDirectionType;
     public readonly sortBy: string;
 
-    constructor(query: ParsedQs, sortProperties: string[]|[]) {
+    constructor(query: PaginationType, sortProperties: string[]|[]) {
         this.sortBy = this.getSortBy(query, sortProperties);
         this.sortDirection = this.getSortDirection(query);
         this.pageNumber = Number(query.pageNumber ?? 1);
@@ -38,7 +38,7 @@ export class Pagination {
         return (this.pageNumber - 1) * this.pageSize;
     }
 
-    private getSortDirection(query: ParsedQs): SortDirectionType {
+    private getSortDirection(query: PaginationType): SortDirectionType {
         let sortDirection: SortDirectionType = "desc"
 
         switch (query.sortDirection) {
@@ -54,7 +54,7 @@ export class Pagination {
         return sortDirection;
     }
 
-    private getSortBy(query: ParsedQs, sortProperties: string[]): string {
+    private getSortBy(query: PaginationType, sortProperties: string[]): string {
         let result = "createdAt";
 
         const querySortBy = query.sortBy;
@@ -90,10 +90,10 @@ export class FullPagination extends Pagination {
     public readonly searchEmailTerm: string | null;
     public readonly searchNameTerm: string | null;
 
-    constructor(query: ParsedQs, sortProperties: string[]|[]) {
+    constructor(query: PaginationType, sortProperties: string[]|[]) {
         super(query, sortProperties);
 
-        this.searchNameTerm = query.searchLoginTerm?.toString() || null;
+        this.searchNameTerm = query.searchNameTerm?.toString() || null;
         this.searchLoginTerm = query.searchLoginTerm?.toString() || null;
         this.searchEmailTerm = query.searchEmailTerm?.toString() || null;
     }
@@ -104,9 +104,11 @@ export class FullPagination extends Pagination {
 export type SortDirectionType = "desc" | "asc";
 
 export type PaginationType = {
-    searchNameTerm: string | null,
-    sortBy: string,
-    sortDirection: SortDirectionType,
-    pageNumber: number,
-    pageSize: number
+    searchNameTerm?: string | null,
+    searchLoginTerm?: string | null,
+    searchEmailTerm?: string | null,
+    sortBy?: string,
+    sortDirection?: SortDirectionType,
+    pageNumber?: number,
+    pageSize?: number
 }
